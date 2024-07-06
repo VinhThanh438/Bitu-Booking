@@ -5,7 +5,18 @@ const pool = require('../config/db.config');
 const signUp = async (req, res, next) => {
     try {
         const { userName, password } = req.body;
-        const query = 'insert into tb_user (user_name, password) values (?, ?)';
+
+        // check existed account
+        let query = 'select * from tb_user where user_name = ?';
+        const [getUserData] = await pool.execute(query, [userName]);
+
+        if (getUserData.length != 0)
+            return res
+                .status(statusCode.UNAUTHORIZED)
+                .json({ message: 'user name already exists!' });
+
+        // create account
+        query = 'insert into tb_user (user_name, password) values (?, ?)';
 
         await pool.execute(query, [userName, password]);
 
