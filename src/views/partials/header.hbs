@@ -1,18 +1,52 @@
 <div style="width:100%; position: fixed; z-index: 1; top: 0;">
     <div class="header-blue">
         <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
-            <div class="container-fluid"><a class="navbar-brand" href="/">BITU BOOKING</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="container-fluid" style="padding:0 90px;"><a class="navbar-brand" href="/">BITU BOOKING</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse"
                         id="navcol-1">
                     <form class="form-inline mr-auto" target="_self">
                         {{!-- <div class="form-group"><label for="search-field"><i class="fa fa-search text-white"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div> --}}
                     </form>
-                    <span class="navbar-text" style="margin-right: 12px;"> 
-                        <a class="login" href="/login">Log In</a>
-                    </span>
-                    <a class="btn btn-light action-button" role="button" href="/signup">Signup</a>
+                    <div class="acc">
+                        {{!-- <span class="navbar-text" style="margin-right: 12px;"> 
+                            <a class="login" href="/login">Log In</a>
+                        </span>
+                        <a class="btn btn-light action-button" role="button" href="/signup"
+                        style="margin-bottom: 5px;">Signup</a> --}}
+                        {{!-- <div class="btn-group">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Small button
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/user">Kiểm tra vé</a>
+                                <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                            </div>
+                        </div> --}}
+                    </div>
                 </div>
             </div>
         </nav>
     </div>
 </div>
+
+<script>
+  const checkLogin = () => {
+        const cookie = document.cookie;
+
+        const arrToken = cookie.split(' ');
+        let cookies = {};
+
+        arrToken.map((e) => {
+            let sub = e.trim().split('=');
+            cookies[sub[0]] = sub[1];
+        });
+
+        const acc = document.querySelector('.acc')
+        if (cookies.userName) {
+            acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button><div class="dropdown-menu"><a class="dropdown-item" href="/user">Kiểm tra vé</a><a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
+        } else {
+            acc.innerHTML = '<span class="navbar-text" style="margin-right: 12px;"> <a class="login" href="/login">Log In</a></span><a class="btn btn-light action-button" role="button" href="/signup"style="margin-bottom: 5px;">Signup</a>'
+        }
+    }  
+    checkLogin()
+</script>

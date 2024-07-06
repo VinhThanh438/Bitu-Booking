@@ -57,4 +57,10 @@ clientRoute
         }
     });
 
+// log out
+clientRoute.route('/logout').get((req, res) => {
+    res.clearCookie('userName');
+    return res.redirect('/');
+});
+
 module.exports = clientRoute;
