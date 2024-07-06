@@ -2,15 +2,19 @@ const express = require('express');
 const morgan = require('morgan');
 
 const errorHandle = require('./middleware/error.middleware');
+const configViewEngine = require('./config/viewEngine.config');
 const allRoute = require('./routes/all.route');
 const apiRoute = require('./routes/api');
+const clientRoute = require('./routes/clientRoute');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT;
 
 app.use(morgan());
+configViewEngine(app);
 
+app.use('/', clientRoute);
 app.use('/api/v1', apiRoute);
 allRoute(app);
 app.use(errorHandle);
