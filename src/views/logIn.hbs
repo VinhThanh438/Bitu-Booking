@@ -3,22 +3,22 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-xl-5 col-md-8">
-            <form class="bg-white rounded shadow-5-strong p-5 mt-5" method="post">
+            <form class="bg-white rounded shadow-5-strong p-5 mt-5" method="post" action="/login">
                 <h4>Login</h4>
               <!-- Email input -->
-              <div class="form-outline mb-4" data-mdb-input-init>
-                <input type="email" id="form1Example1" class="form-control" />
+              <div class="form-outline mb-4">
                 <label class="form-label" for="form1Example1">User name</label>
+                <input type="text" id="form1Example1" class="form-control" name="userName"/>
               </div>
 
               <!-- Password input -->
-              <div class="form-outline mb-4" data-mdb-input-init>
-                <input type="password" id="form1Example2" class="form-control" />
+              <div class="form-outline mb-4">
                 <label class="form-label" for="form1Example2">Password</label>
+                <input type="password" id="form1Example2" class="form-control" name="password"/>
               </div>
 
               <!-- 2 column grid layout for inline styling -->
-              <div class="row mb-4">
+              {{!-- <div class="row mb-4">
                 <div class="col d-flex justify-content-center">
                   <!-- Checkbox -->
                   <div class="form-check">
@@ -33,10 +33,10 @@
                   <!-- Simple link -->
                   <a href="#!">Forgot password?</a>
                 </div>
-              </div>
+              </div> --}}
 
               <!-- Submit button -->
-              <button type="submit" class="btn btn-primary btn-block" data-mdb-ripple-init>Log in</button>
+              <button type="submit" class="btn btn-primary btn-block">Log in</button>
               <p class="text-center mt-3">Not registered? <a href="/signup">Create an account</a></p>
             </form>
           </div>

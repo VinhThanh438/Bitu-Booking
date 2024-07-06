@@ -28,6 +28,19 @@ const signUp = async (req, res, next) => {
 
 const logIn = async (req, res, next) => {
     try {
+        const { userName, password } = req.body;
+
+        // check user name and password
+        const query =
+            'select * from tb_user where user_name = ? and password = ?';
+        const [getUserData] = await pool.execute(query, [userName, password]);
+        console.log('get user Data: ', getUserData);
+
+        if (getUserData.length == 0) console.log(getUserData);
+
+        return res
+            .status(statusCode.OK)
+            .json({ userName: getUserData[0].user_name });
     } catch (error) {
         next(new appError(error));
     }
