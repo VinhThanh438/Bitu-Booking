@@ -13,6 +13,16 @@ clientRoute.route('/').get(async (req, res) => {
 clientRoute.route('/login').get((req, res) => res.render('logIn'));
 
 // get sign up page
-clientRoute.route('/signup').get((req, res) => res.render('signUp'));
+clientRoute
+    .route('/signup')
+    .get((req, res) => res.render('signUp'))
+    .post(async (req, res) => {
+        const { userName, password } = req.body;
+        await axios.post('/api/v1/signup', {
+            userName: userName,
+            password: password,
+        });
+        return res.render('login');
+    });
 
 module.exports = clientRoute;
