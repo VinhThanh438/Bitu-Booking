@@ -1,1 +1,22 @@
-<h1>home</h1>
+<div class="container mt-100">
+   <div class="row">
+      {{#each data}}
+      <div class="col-md-4 col-sm-6">
+         <div class="card mb-30">
+            <a class="card-img-tiles" href="#" data-abc="true">
+               <div class="inner">
+                  <div class="main-img">
+                    <img src="/imgs/ticket.jpg" alt="Category" style="margin: auto;">
+                  </div>
+               </div>
+            </a>
+            <div class="card-body text-center">
+               <h4 class="card-title">{{ticket_name}}</h4>
+               <p class="text-muted">{{ticket_price}} đ</p>
+               <a class="btn btn-outline-primary" href="#" data-abc="true">Đặt vé</a>
+            </div>
+         </div>
+      </div>
+      {{~/each}} 
+   </div>
+</div>
