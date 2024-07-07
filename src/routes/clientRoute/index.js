@@ -29,7 +29,7 @@ clientRoute
                     bookingId: getBookingData.data.bookingId,
                 }
             );
-            // console.log(getBookingDetail.data);
+
             return res.send(getBookingDetail.data);
         } catch (error) {
             return res.redirect('/');

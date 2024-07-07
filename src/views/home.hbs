@@ -3,18 +3,22 @@
       {{#each ticketData}}
       <div class="col-md-4 col-sm-6" style="margin-top: 30px;">
          <div class="card mb-30">
-            <a class="card-img-tiles" href="#" data-abc="true">
+            <div class="card-img-tiles" href="#" data-abc="true">
                <div class="inner">
                   <div class="main-img">
                     <img src="/imgs/ticket.jpg" alt="Category" style="margin: auto;">
                   </div>
                </div>
-            </a>
+            </div>
             <div class="card-body text-center">
                <h4 class="card-title">{{ticket_name}}</h4>
                <p class="text-muted price">{{ticket_price}} đ</p>
                <h6>Số lượng: {{quantity}}</h6>
+               {{#eq quantity 0}}
+               <p class="text-muted">Vé đã bán hết</p>
+               {{else}}
                <a class="btn btn-outline-primary" href="/booking/{{ticket_id}}" data-abc="true">Đặt vé</a>
+               {{/eq}}
             </div>
          </div>
       </div>
