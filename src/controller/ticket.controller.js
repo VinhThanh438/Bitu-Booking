@@ -59,7 +59,7 @@ const addBookingDetail = async (req, res, next) => {
         // update ticket number
         query =
             'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
-        await pool.execute(query, [ticketId]);
+        // await pool.execute(query, [ticketId]);
 
         return res
             .status(statusCode.CREATED)

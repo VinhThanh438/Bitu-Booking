@@ -1,0 +1,77 @@
+<style>
+    .card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-img-top {
+            display: flex;
+            height:100%;
+            {{!-- width: 300px; --}}
+
+        }
+
+        .ProductDetails {
+            display: flex;
+            height: 61vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .FirstContainer
+        {
+            display: flex;
+            flex-direction: row;
+            max-width: 1440px;
+            justify-content:space-between;
+           
+        }
+        .FirstContainerImage{
+            max-width: 40%;
+        }
+        .FirstContainerDesc
+        {
+            max-width: 50%;
+        }
+        .FirstContainerButton{
+            max-width: 100%;
+        }
+        .btn-payment{
+            border: none;
+            height: 50px;
+            width: 300px;
+        }
+
+        .btn-payment:hover {
+            background-color: rgb(4, 204, 4);
+        }
+</style>
+
+<div class="ProductDetails">
+    <h4>Thông tin đặt vé</h4>
+    <div class="cardn border" style="width: 39rem;">
+        {{#each data}}
+        <div class="FirstContainer">
+            <div class="FirstContainerImage">
+                <img src="/imgs/ticket.jpg" class="card-img-top" alt="...">
+            </div>
+            <form class="FirstContainerDesc" method="post" action="/payment">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item FontSizeMidum">Tên người đặt: {{userName}}</li>
+                    <input type="hidden" value="{{userName}}" name="userName">
+                    <li class="list-group-item FontSizeMidum">Tên vé: {{ticketName}}</li>
+                    <input type="hidden" value="{{ticketName}}" name="ticketName">
+                    <li class="list-group-item FontSizeMidum">Số lượng: 1</li>
+                    <li class="list-group-item FontSizeMidum d-flex">Giá: <p class="price">{{ticketPrice}}</p></li>
+                    <input type="hidden" value="{{ticketPrice}}" name="ticketPrice">
+                    <li class="list-group-item FontSizeMidum d-flex">Thành tiền: <p class="price">{{ticketPrice}}</p></li>
+                    <input type="hidden" value="{{ticketPrice}}" name="totalPrice">
+                </ul>
+                <button type="submit" class="btn btn-payment btn-primary btn-lg btn-block">Thanh toán</button>
+            </form>
+        </div>
+        {{~/each}} 
+    </div>
+</div>

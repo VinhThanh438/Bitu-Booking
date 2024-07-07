@@ -29,8 +29,9 @@ clientRoute
                     bookingId: getBookingData.data.bookingId,
                 }
             );
+            const data = getBookingDetail.data;
 
-            return res.send(getBookingDetail.data);
+            return res.render('bookingDetail', { data: [data] });
         } catch (error) {
             return res.redirect('/');
         }
