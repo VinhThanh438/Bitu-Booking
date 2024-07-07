@@ -33,17 +33,18 @@
   const checkLogin = () => {
         const cookie = document.cookie;
 
-        const arrToken = cookie.split(' ');
+        const cookieStore = cookie.split(' ');
         let cookies = {};
 
-        arrToken.map((e) => {
+        cookieStore.map((e) => {
             let sub = e.trim().split('=');
             cookies[sub[0]] = sub[1];
         });
 
         const acc = document.querySelector('.acc')
+        console.log(cookies)
         if (cookies.userName) {
-            acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button><div class="dropdown-menu"><a class="dropdown-item" href="/user">Kiểm tra vé</a><a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
+            acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button><div class="dropdown-menu"><a class="dropdown-item" href="/user">Thông tin</a><a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
         } else {
             acc.innerHTML = '<span class="navbar-text" style="margin-right: 12px;"> <a class="login" href="/login">Log In</a></span><a class="btn btn-light action-button" role="button" href="/signup"style="margin-bottom: 5px;">Signup</a>'
         }

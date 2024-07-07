@@ -9,7 +9,9 @@ const ApiRouter = express.Router();
 
 ApiRouter.route('/').get(getAllTicket);
 
-ApiRouter.route('/booking').get(getBookingDetail).post(addBookingDetail);
+ApiRouter.route('/booking').post(addBookingDetail);
+
+ApiRouter.route('/booking/detail').post(getBookingDetail);
 
 ApiRouter.route('/signup').post(signUp);
 

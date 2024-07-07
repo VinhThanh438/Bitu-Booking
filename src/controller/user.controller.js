@@ -36,11 +36,15 @@ const logIn = async (req, res, next) => {
         const [getUserData] = await pool.execute(query, [userName, password]);
         console.log('get user Data: ', getUserData);
 
-        if (getUserData.length == 0) console.log(getUserData);
+        if (getUserData.length == 0)
+            return res
+                .status(statusCode.NOT_FOUND)
+                .json({ message: 'user not found' });
 
-        return res
-            .status(statusCode.OK)
-            .json({ userName: getUserData[0].user_name });
+        return res.status(statusCode.OK).json({
+            userName: getUserData[0].user_name,
+            userId: getUserData[0].user_id,
+        });
     } catch (error) {
         next(new appError(error));
     }

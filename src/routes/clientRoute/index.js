@@ -8,6 +8,34 @@ clientRoute.route('/').get(async (req, res) => {
     return res.render('home', { ticketData: getData.data });
 });
 
+clientRoute
+    .route('/booking/:ticket_id')
+    // add booking detail
+    .get(async (req, res) => {
+        try {
+            const ticketId = req.params.ticket_id;
+            const userId = req.cookies.userId;
+
+            // create booking detail
+            const getBookingData = await axios.post('/api/v1/booking', {
+                userId,
+                ticketId,
+            });
+
+            // get booking detail
+            const getBookingDetail = await axios.post(
+                '/api/v1/booking/detail',
+                {
+                    bookingId: getBookingData.data.bookingId,
+                }
+            );
+            // console.log(getBookingDetail.data);
+            return res.send(getBookingDetail.data);
+        } catch (error) {
+            return res.redirect('/');
+        }
+    });
+
 // get log in page
 clientRoute
     .route('/login')
@@ -26,11 +54,9 @@ clientRoute
 
             // save user information in cookies
             res.cookie('userName', userData.data.userName);
+            res.cookie('userId', userData.data.userId);
 
-            // get ticket data
-            const ticketData = await axios.get('/api/v1');
-
-            return res.render('home', { ticketData: ticketData.data });
+            return res.redirect('/');
         } catch (error) {
             return res.render('logIn');
         }
@@ -60,6 +86,7 @@ clientRoute
 // log out
 clientRoute.route('/logout').get((req, res) => {
     res.clearCookie('userName');
+    res.clearCookie('userId');
     return res.redirect('/');
 });
 
