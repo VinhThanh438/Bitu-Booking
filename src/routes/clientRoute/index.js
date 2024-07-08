@@ -28,6 +28,7 @@ clientRoute
             // get booking detail after creating
             return res.redirect(`/booking/${bookingId}`);
         } catch (error) {
+            console.log(error);
             return res.redirect('/');
         }
     })
@@ -46,6 +47,7 @@ clientRoute
 
             return res.render('bookingDetail', { data: [data] });
         } catch (error) {
+            console.log(error);
             return res.redirect('/');
         }
     });
@@ -58,14 +60,15 @@ clientRoute
 clientRoute.route('/payment').post(async (req, res) => {
     try {
         const userId = req.cookies.userId;
-        const { ticketId, totalPrice } = req.body;
+        const { totalPrice, ticketDetailId } = req.body;
         await axios.post('/api/v1/payment', {
-            ticketDetailId: ticketId,
+            ticketDetailId: ticketDetailId,
             totalPrice,
             userId,
         });
         return res.render('paymentSuccess');
     } catch (error) {
+        console.log(error);
         if (error.response.status == 402)
             return res.redirect(req.get('Referer'));
         return res.redirect('/');
@@ -94,6 +97,7 @@ clientRoute
 
             return res.redirect('/');
         } catch (error) {
+            console.log(error);
             return res.render('logIn');
         }
     });

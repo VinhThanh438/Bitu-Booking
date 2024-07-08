@@ -49,7 +49,7 @@
         }
 </style>
 
-<script src="/script/bookingDetailHandle.js"></script>
+{{!-- <script src="/script/bookingDetailHandle.js"></script> --}}
 
 <div class="ProductDetails">
     <h4>Thông tin đặt vé</h4>
@@ -61,6 +61,7 @@
             </div>
             <form class="FirstContainerDesc formSubmit" method="post" action="/payment">
                 <input type="hidden" name="ticketId" value="{{ticketId}}">
+                <input class="ticketDetailId" type="hidden" name="ticketDetailId" value="{{ticketDetailId}}">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item FontSizeMidum">Tên người đặt: {{userName}}</li>
                     <input type="hidden" value="{{userName}}" name="userName">

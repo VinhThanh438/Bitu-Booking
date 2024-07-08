@@ -18,7 +18,8 @@ const getBookingDetail = async (req, res, next) => {
         // get booking infor
         let query = 'select * from tb_ticket_detail where td_id = ?';
         const [bookingData] = await pool.execute(query, [bookingId]);
-        const { user_id, ticket_id, status, booking_time } = bookingData[0];
+        const { td_id, user_id, ticket_id, status, booking_time } =
+            bookingData[0];
 
         // get user infor
         query = 'select * from tb_user where user_id = ?';
@@ -31,6 +32,7 @@ const getBookingDetail = async (req, res, next) => {
         const { ticket_name, ticket_price } = ticketData[0];
 
         const data = {
+            ticketDetailId: td_id,
             userId: user_id,
             ticketId: ticket_id,
             userName,
