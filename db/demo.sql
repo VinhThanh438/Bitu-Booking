@@ -13,6 +13,7 @@ create table `tb_user` (
 	`user_id` int not null auto_increment primary key,
     `user_name` varchar(255) not null,
     `password` varchar(255) not null,
+    `balance` bigint not null default 120000,
     `role` varchar(50) not null default 'user', -- user, admin
     `create_at` timestamp default current_timestamp
 ) auto_increment = 1000;
@@ -28,13 +29,23 @@ create table `tb_ticket_detail` (
 ) auto_increment = 1000;
 
 create table `tb_payment_details` (
-	`pd_id` int not null auto_increment primary key,
-    `td_id` int not null,
+    `td_id` int not null primary key,
     `confirmation_time` timestamp default current_timestamp,
     constraint `fk_td` foreign key (`td_id`) references `tb_ticket_detail`(`td_id`)
-) auto_increment = 1000;
+);
 
-insert into `tb_user` (`user_name`, `password`) values ('Thanh Vinh', '123456');
+delimiter //
+create trigger after_delete_tb_ticket_detail
+after delete on tb_ticket_detail
+for each row
+begin
+    update tb_ticket set quantity = quantity + 1 where ticket_id = old.ticket_id;
+end //
+delimiter ;
+
+insert into `tb_user` (`user_name`, `password`) values 
+('Thanh Vinh', '123456'),
+('haui', '123456');
 
 insert into `tb_ticket` (`ticket_name`, `ticket_price`, `quantity`) values 
 ('Ha Noi', 100000, 3),
@@ -46,3 +57,4 @@ insert into `tb_ticket` (`ticket_name`, `ticket_price`, `quantity`) values
 
 select * from `tb_user`;
 select * from `tb_ticket`;
+select * from `tb_ticket_detail`;
