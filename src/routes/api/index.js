@@ -2,6 +2,7 @@ const {
     getAllTicket,
     getBookingDetail,
     addBookingDetail,
+    removeBookingDetail,
 } = require('../../controller/ticket.controller');
 const { signUp, logIn } = require('../../controller/user.controller');
 const express = require('express');
@@ -12,6 +13,8 @@ ApiRouter.route('/').get(getAllTicket);
 ApiRouter.route('/booking').post(addBookingDetail);
 
 ApiRouter.route('/booking/detail').post(getBookingDetail);
+
+ApiRouter.route('/booking/cancled').post(removeBookingDetail);
 
 ApiRouter.route('/signup').post(signUp);
 
