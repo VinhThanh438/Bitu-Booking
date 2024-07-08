@@ -11,7 +11,7 @@ clientRoute.route('/').get(async (req, res) => {
 clientRoute
     .route('/booking/:ticket_id')
     // add booking detail
-    .get(async (req, res) => {
+    .post(async (req, res) => {
         try {
             const ticketId = req.params.ticket_id;
             const userId = req.cookies.userId;
@@ -22,11 +22,22 @@ clientRoute
                 ticketId,
             });
 
+            const bookingId = getBookingData.data.bookingId;
+
+            // get booking detail after creating
+            return res.redirect(`/booking/${bookingId}`);
+        } catch (error) {
+            return res.redirect('/');
+        }
+    })
+    .get(async (req, res) => {
+        try {
+            const bookingId = req.params.ticket_id;
             // get booking detail
             const getBookingDetail = await axios.post(
                 '/api/v1/booking/detail',
                 {
-                    bookingId: getBookingData.data.bookingId,
+                    bookingId: bookingId,
                 }
             );
             const data = getBookingDetail.data;

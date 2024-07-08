@@ -17,7 +17,9 @@
                {{#eq quantity 0}}
                <p class="text-muted">Vé đã bán hết</p>
                {{else}}
-               <a class="btn btn-outline-primary" href="/booking/{{ticket_id}}" data-abc="true">Đặt vé</a>
+               <form action="/booking/{{ticket_id}}" method="post">
+                <button type="submit" class="btn btn-outline-primary">Đặt vé</button>
+               </form>
                {{/eq}}
             </div>
          </div>
