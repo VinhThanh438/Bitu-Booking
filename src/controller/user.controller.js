@@ -50,7 +50,38 @@ const logIn = async (req, res, next) => {
     }
 };
 
+const getUserInfor = async (req, res, next) => {
+    try {
+        // get user information
+        const userId = req.params.userId;
+        let query = 'select user_name, balance from tb_user where user_id = ?';
+        const [getUserData] = await pool.execute(query, [userId]);
+
+        // get confirmed booking
+        query = `select u.user_name, t.ticket_name, t.ticket_price, td.td_id, td.status, pd.confirmation_time
+                from tb_user u
+                join tb_ticket_detail td ON u.user_id = td.user_id
+                join tb_ticket t ON td.ticket_id = t.ticket_id
+                left join tb_payment_details pd ON td.td_id = pd.td_id
+                where u.user_id = ? and td.status = ?`;
+        const [getBookingData] = await pool.execute(query, [
+            userId,
+            'confirmed',
+        ]);
+        const userData = [getUserData[0]];
+        let bookingData = [getBookingData[0]];
+        if (!getBookingData[0]) bookingData = {};
+
+        const data = { userData, bookingData };
+
+        return res.status(statusCode.OK).json(data);
+    } catch (error) {
+        next(new appError(error));
+    }
+};
+
 module.exports = {
     signUp,
     logIn,
+    getUserInfor,
 };
