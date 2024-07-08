@@ -6,6 +6,7 @@ const {
     addBookingDetail,
     removeBookingDetail,
     addPaymentDetail,
+    cancelBooking,
 } = require('../../controller/ticket.controller');
 const {
     signUp,
@@ -24,6 +25,8 @@ ApiRouter.route('/booking/detail').post(getBookingDetail);
 ApiRouter.route('/booking/canceled').post(removeBookingDetail);
 
 ApiRouter.route('/payment').post(checkPaymentTime, addPaymentDetail);
+
+ApiRouter.route('/payment/canceled').post(cancelBooking);
 
 ApiRouter.route('/signup').post(signUp);
 

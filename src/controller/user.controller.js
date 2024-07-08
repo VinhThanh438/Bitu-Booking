@@ -63,10 +63,11 @@ const getUserInfor = async (req, res, next) => {
                 join tb_ticket_detail td ON u.user_id = td.user_id
                 join tb_ticket t ON td.ticket_id = t.ticket_id
                 left join tb_payment_details pd ON td.td_id = pd.td_id
-                where u.user_id = ? and td.status = ?`;
+                where u.user_id = ? and td.status = ? or td.status = ?`;
         const [getBookingData] = await pool.execute(query, [
             userId,
             'confirmed',
+            'canceled',
         ]);
         const userData = [getUserData[0]];
         let bookingData = [getBookingData[0]];

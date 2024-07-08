@@ -123,10 +123,45 @@ const addPaymentDetail = async (req, res, next) => {
     }
 };
 
+const cancelBooking = async (req, res, next) => {
+    try {
+        const { ticketDetailId } = req.body;
+
+        // select data
+        let query = `select tb_user.user_id, tb_ticket_detail.ticket_price
+                    from tb_ticket_detail
+                    join tb_user on tb_ticket_detail.user_id = tb_user.user_id
+                    where td_id = ?`;
+        const [selectData] = await pool.execute(query, [ticketDetailId]);
+        const userId = selectData[0].user_id;
+        const totalPrice = selectData[0].ticket_price;
+
+        // refund to user
+        const refundMoney = (totalPrice / 100) * 90;
+        query = 'update tb_user set balance = ? where user_id = ?';
+        await pool.execute(query, [refundMoney, userId]);
+
+        // update booking status
+        query = 'update tb_ticket_detail set status = ? where td_id = ?';
+        await pool.execute(query, ['canceled', ticketDetailId]);
+
+        // delete confirmed time
+        query = 'delete from tb_payment_details where td_id = ?';
+        await pool.execute(query, [ticketDetailId]);
+
+        return res
+            .status(statusCode.OK)
+            .json({ message: 'booking has canceled' });
+    } catch (error) {
+        next(new appError(error));
+    }
+};
+
 module.exports = {
     getAllTicket,
     getBookingDetail,
     addBookingDetail,
     removeBookingDetail,
     addPaymentDetail,
+    cancelBooking,
 };
