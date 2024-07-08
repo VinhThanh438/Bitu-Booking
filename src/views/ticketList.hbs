@@ -46,7 +46,11 @@
                                          <div class="cart_item_text">{{status}}</div>
                                      </div>
                                      <div class="cart_item_total cart_info_col">
-                                         <button class="btn btn-primary cart_item_text">Hủy</button>
+                                        {{#eq status "confirmed"}}
+                                         <a href="/booking/cancel/{{td_id}}" class="btn btn-primary cart_item_text">Hủy</a>
+                                         {{else}}
+                                         
+                                        {{/eq}}
                                      </div>
                                  </div>
                              </li>

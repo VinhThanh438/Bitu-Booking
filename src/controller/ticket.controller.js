@@ -128,22 +128,29 @@ const cancelBooking = async (req, res, next) => {
         const { ticketDetailId } = req.body;
 
         // select data
-        let query = `select tb_user.user_id, tb_ticket_detail.ticket_price
+        let query = `select tb_user.user_id, tb_ticket.ticket_price, tb_ticket.ticket_id
                     from tb_ticket_detail
+                    join tb_ticket on tb_ticket_detail.ticket_id = tb_ticket.ticket_id
                     join tb_user on tb_ticket_detail.user_id = tb_user.user_id
                     where td_id = ?`;
         const [selectData] = await pool.execute(query, [ticketDetailId]);
         const userId = selectData[0].user_id;
         const totalPrice = selectData[0].ticket_price;
+        const ticketId = selectData[0].ticket_id;
 
         // refund to user
         const refundMoney = (totalPrice / 100) * 90;
-        query = 'update tb_user set balance = ? where user_id = ?';
+        query = 'update tb_user set balance = balance + ? where user_id = ?';
         await pool.execute(query, [refundMoney, userId]);
 
         // update booking status
         query = 'update tb_ticket_detail set status = ? where td_id = ?';
         await pool.execute(query, ['canceled', ticketDetailId]);
+
+        // update quantity
+        query =
+            'update tb_ticket set quantity = quantity + 1 where ticket_id = ?';
+        await pool.execute(query, ['canceled', ticketId]);
 
         // delete confirmed time
         query = 'delete from tb_payment_details where td_id = ?';

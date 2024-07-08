@@ -75,6 +75,21 @@ clientRoute.route('/payment').post(async (req, res) => {
     }
 });
 
+clientRoute.route('/booking/cancel/:ticketDetailId').get(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        const ticketDetailId = req.params.ticketDetailId;
+
+        await axios.post('/api/v1/payment/canceled', { ticketDetailId });
+
+        const data = await axios.get(`/api/v1/user/${userId}`);
+        return res.render('ticketList', { data: data.data });
+    } catch (error) {
+        console.log(error.data);
+        return res.redirect('/');
+    }
+});
+
 // get log in page
 clientRoute
     .route('/login')
@@ -135,7 +150,6 @@ clientRoute.route('/user').get(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         const data = await axios.get(`/api/v1/user/${userId}`);
-        console.log(data.data);
         return res.render('ticketList', { data: data.data });
     } catch (error) {
         console.log(error);

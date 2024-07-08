@@ -15,6 +15,7 @@ const {
 } = require('../../controller/user.controller');
 const { checkBooking } = require('../../middleware/checkBooking');
 const { checkPaymentTime } = require('../../middleware/checkPaymentTime');
+const { checkCanceled } = require('../../middleware/checkCanceled');
 
 ApiRouter.route('/').get(getAllTicket);
 
@@ -26,7 +27,7 @@ ApiRouter.route('/booking/canceled').post(removeBookingDetail);
 
 ApiRouter.route('/payment').post(checkPaymentTime, addPaymentDetail);
 
-ApiRouter.route('/payment/canceled').post(cancelBooking);
+ApiRouter.route('/payment/canceled').post(checkCanceled, cancelBooking);
 
 ApiRouter.route('/signup').post(signUp);
 
