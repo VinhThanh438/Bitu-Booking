@@ -72,7 +72,6 @@ const addBookingDetail = async (req, res, next) => {
 const removeBookingDetail = async (req, res, next) => {
     try {
         const { ticketDetailId } = req.body;
-        console.log(req.body);
 
         // delete booking detail
         let query = 'delete from tb_ticket_detail where td_id = ?';
@@ -84,9 +83,48 @@ const removeBookingDetail = async (req, res, next) => {
     }
 };
 
+const addPaymentDetail = async (req, res, next) => {
+    try {
+        const { ticketDetailId, userId, price } = req.body;
+
+        // get user data
+        let query = 'select * from tb_user where user_id = ?';
+        const [getUserData] = await pool.execute(query, [userId]);
+        const userData = getUserData[0];
+
+        // check user balance
+        const { balance } = userData;
+
+        // unsuccessful
+        if (balance < price)
+            return next(
+                new appError(
+                    statusCode.PAYMENT_REQUIRED,
+                    'user account does not have sufficient funds'
+                )
+            );
+
+        // success => update user balance
+        const newBalance = balance - price;
+        query = 'update tb_user set balance = ? where user_id = ?';
+        await pool.execute(query, [newBalance, userId]);
+
+        // create payment detail
+        query = 'insert into tb_payment_details (td_id) values (?)';
+        await pool.execute(query, [ticketDetailId]);
+
+        return res
+            .status(statusCode.CREATED)
+            .json({ message: 'payment has been confirmed successfully' });
+    } catch (error) {
+        next(new appError(error));
+    }
+};
+
 module.exports = {
     getAllTicket,
     getBookingDetail,
     addBookingDetail,
     removeBookingDetail,
+    addPaymentDetail,
 };
