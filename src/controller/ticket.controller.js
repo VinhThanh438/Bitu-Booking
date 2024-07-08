@@ -59,7 +59,7 @@ const addBookingDetail = async (req, res, next) => {
         // update ticket number
         query =
             'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
-        // await pool.execute(query, [ticketId]);
+        await pool.execute(query, [ticketId]);
 
         return res
             .status(statusCode.CREATED)
@@ -71,16 +71,12 @@ const addBookingDetail = async (req, res, next) => {
 
 const removeBookingDetail = async (req, res, next) => {
     try {
-        const { tiketDetailId, ticketId } = req.body;
+        const { ticketDetailId } = req.body;
+        console.log(req.body);
 
         // delete booking detail
-        let query = 'delete from from tb_ticket_detail where td_id = ?';
-        await pool.execute(query, [tiketDetailId]);
-
-        // update ticket quantity
-        query =
-            'update tb_ticket set quantity = quantity + 1 where ticket_id = ?';
-        await pool.execute(query, [ticketId]);
+        let query = 'delete from tb_ticket_detail where td_id = ?';
+        await pool.execute(query, [ticketDetailId]);
 
         return res.status(statusCode.OK).json(message.SUCCESS);
     } catch (error) {

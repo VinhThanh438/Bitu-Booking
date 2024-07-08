@@ -15,18 +15,7 @@
     </div>
     {{> footer}}
 
-    <script>
-        const formatMoney = () => {
-            const vndElements = document.getElementsByClassName("price");
-            for (let i = 0; i < vndElements.length; i++) {
-                const number = parseInt(vndElements[i].innerText);
-                const formattedNumber = number.toLocaleString("vi-VN") + 'đ';
-                vndElements[i].innerText = formattedNumber;
-            }
-        }
-
-        formatMoney()
-    </script>
+    <script src="/script/formatMoney.js"></script>
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

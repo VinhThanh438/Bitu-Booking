@@ -14,7 +14,7 @@ ApiRouter.route('/booking').post(addBookingDetail);
 
 ApiRouter.route('/booking/detail').post(getBookingDetail);
 
-ApiRouter.route('/booking/cancled').post(removeBookingDetail);
+ApiRouter.route('/booking/canceled').post(removeBookingDetail);
 
 ApiRouter.route('/signup').post(signUp);
 

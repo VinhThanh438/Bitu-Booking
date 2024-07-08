@@ -30,10 +30,11 @@ clientRoute
             return res.redirect('/');
         }
     })
+    // get booking detail
     .get(async (req, res) => {
         try {
             const bookingId = req.params.ticket_id;
-            // get booking detail
+
             const getBookingDetail = await axios.post(
                 '/api/v1/booking/detail',
                 {
