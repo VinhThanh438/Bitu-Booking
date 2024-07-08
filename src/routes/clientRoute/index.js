@@ -8,6 +8,7 @@ clientRoute.route('/').get(async (req, res) => {
     return res.render('home', { ticketData: getData.data });
 });
 
+// booking detail
 clientRoute
     .route('/booking/:ticket_id')
     // add booking detail
@@ -48,6 +49,28 @@ clientRoute
             return res.redirect('/');
         }
     });
+
+// payment handle
+clientRoute
+    .route('/payment/success')
+    .get((req, res) => res.render('paymentSuccess'));
+
+clientRoute.route('/payment').post(async (req, res) => {
+    try {
+        const userId = req.cookies.userId;
+        const { ticketId, totalPrice } = req.body;
+        await axios.post('/api/v1/payment', {
+            ticketDetailId: ticketId,
+            totalPrice,
+            userId,
+        });
+        return res.render('paymentSuccess');
+    } catch (error) {
+        if (error.response.status == 402)
+            return res.redirect(req.get('Referer'));
+        return res.redirect('/');
+    }
+});
 
 // get log in page
 clientRoute

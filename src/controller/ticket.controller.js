@@ -85,7 +85,7 @@ const removeBookingDetail = async (req, res, next) => {
 
 const addPaymentDetail = async (req, res, next) => {
     try {
-        const { ticketDetailId, userId, price } = req.body;
+        const { ticketDetailId, userId, totalPrice } = req.body;
 
         // get user data
         let query = 'select * from tb_user where user_id = ?';
@@ -96,7 +96,7 @@ const addPaymentDetail = async (req, res, next) => {
         const { balance } = userData;
 
         // unsuccessful
-        if (balance < price)
+        if (balance < totalPrice)
             return next(
                 new appError(
                     statusCode.PAYMENT_REQUIRED,
@@ -105,7 +105,7 @@ const addPaymentDetail = async (req, res, next) => {
             );
 
         // success => update user balance
-        const newBalance = balance - price;
+        const newBalance = balance - totalPrice;
         query = 'update tb_user set balance = ? where user_id = ?';
         await pool.execute(query, [newBalance, userId]);
 

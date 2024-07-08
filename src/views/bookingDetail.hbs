@@ -59,7 +59,8 @@
             <div class="FirstContainerImage">
                 <img src="/imgs/ticket.jpg" class="card-img-top" alt="...">
             </div>
-            <form class="FirstContainerDesc" method="post" action="/payment">
+            <form class="FirstContainerDesc formSubmit" method="post" action="/payment">
+                <input type="hidden" name="ticketId" value="{{ticketId}}">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item FontSizeMidum">Tên người đặt: {{userName}}</li>
                     <input type="hidden" value="{{userName}}" name="userName">
@@ -68,10 +69,10 @@
                     <li class="list-group-item FontSizeMidum">Số lượng: 1</li>
                     <li class="list-group-item FontSizeMidum d-flex">Giá: <p class="price">{{ticketPrice}}</p></li>
                     <input type="hidden" value="{{ticketPrice}}" name="ticketPrice">
-                    <li class="list-group-item FontSizeMidum d-flex">Thành tiền: <p class="price">{{ticketPrice}}</p></li>
+                    <li class="list-group-item FontSizeMidum d-flex">Thành tiền: <p class="totalPrice price">{{ticketPrice}}</p></li>
                     <input type="hidden" value="{{ticketPrice}}" name="totalPrice">
                 </ul>
-                <button type="submit" class="btn btn-payment btn-primary btn-lg btn-block">Thanh toán</button>
+                <button type="submit" class="btn btn-payment btn-primary btn-lg btn-block submitBtn">Thanh toán</button>
             </form>
         </div>
         {{~/each}} 
