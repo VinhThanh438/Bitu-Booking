@@ -1,3 +1,5 @@
+const express = require('express');
+const ApiRouter = express.Router();
 const {
     getAllTicket,
     getBookingDetail,
@@ -6,9 +8,8 @@ const {
     addPaymentDetail,
 } = require('../../controller/ticket.controller');
 const { checkBooking } = require('../../middleware/checkBooking');
+const { checkPaymentTime } = require('../../middleware/checkPaymentTime');
 const { signUp, logIn } = require('../../controller/user.controller');
-const express = require('express');
-const ApiRouter = express.Router();
 
 ApiRouter.route('/').get(getAllTicket);
 
@@ -18,7 +19,7 @@ ApiRouter.route('/booking/detail').post(getBookingDetail);
 
 ApiRouter.route('/booking/canceled').post(removeBookingDetail);
 
-ApiRouter.route('/payment').post(addPaymentDetail);
+ApiRouter.route('/payment').post(checkPaymentTime, addPaymentDetail);
 
 ApiRouter.route('/signup').post(signUp);
 

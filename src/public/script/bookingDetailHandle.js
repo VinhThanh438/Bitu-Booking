@@ -2,28 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlPath = window.location.pathname;
     const parts = urlPath.split('/');
     const bookingId = parts[parts.length - 1];
-    const formSubmit = document.querySelector('.formSubmit');
-
-    // handle the leave page event
-    // window.addEventListener('beforeunload', (e) => {
-    //     formSubmit.addEventListener('submit', (event) => {
-    //         window.removeEventListener('beforeunload');
-    //     });
-
-    //     const confirmationMessage =
-    //         'Bạn có chắc chắn muốn rời khỏi trang này ?';
-    //     const body = {
-    //         ticketDetailId: bookingId,
-    //     };
-    //     const headers = {
-    //         type: 'application/json',
-    //     };
-    //     const blob = new Blob([JSON.stringify(body)], headers);
-
-    //     e.returnValue = confirmationMessage;
-    //     navigator.sendBeacon('/api/v1/booking/canceled', blob);
-    //     return confirmationMessage;
-    // });
 
     // redirect to another page and delete booking detail
     const redirectToHomePage = () => {
