@@ -65,7 +65,7 @@ const addBookingDetail = async (req, res, next) => {
 
         const bookingId = data.insertId;
 
-        // auto cancel booking
+        // auto cancel booking after 60 seconds
         setTimeout(async () => {
             let query = 'select * from tb_ticket_detail where td_id = ?';
             const [getData] = await pool.execute(query, [bookingId]);
@@ -75,7 +75,7 @@ const addBookingDetail = async (req, res, next) => {
                 await pool.execute(query, [bookingId]);
                 console.log('he thong da huy ve');
             }
-        }, 10000);
+        }, 60000);
 
         return res.status(statusCode.CREATED).json({ bookingId: bookingId });
     } catch (error) {
@@ -150,7 +150,7 @@ const cancelBooking = async (req, res, next) => {
         const totalPrice = selectData[0].ticket_price;
         const ticketId = selectData[0].ticket_id;
 
-        // refund to user
+        // refund to user (refund money = 90% of ticket price)
         const refundMoney = (totalPrice / 100) * 90;
         query = 'update tb_user set balance = balance + ? where user_id = ?';
         await pool.execute(query, [refundMoney, userId]);

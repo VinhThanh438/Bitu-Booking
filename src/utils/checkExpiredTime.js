@@ -7,8 +7,8 @@ const checkPaymentExpiration = (bookingTime) => {
     const currentTime = moment();
     // format payment time
     const formatBookingTime = moment(bookingTime, format);
-    // expiration time (15 seconds)
-    const expirationTime = formatBookingTime.clone().add(15, 'seconds');
+    // expiration time (60 seconds)
+    const expirationTime = formatBookingTime.clone().add(60, 'seconds');
     // check booking time
     return currentTime.isAfter(expirationTime);
 };

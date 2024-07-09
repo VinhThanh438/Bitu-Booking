@@ -30,5 +30,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set a timeout to trigger after 5 minutes (300000 milliseconds)
     setTimeout(() => {
         redirectToHomePage();
-    }, 10000); // 10 second
+    }, 60000); // 60 second
 });
