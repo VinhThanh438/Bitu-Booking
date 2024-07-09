@@ -57,3 +57,17 @@ html {
 .navbar .nav-link {
   color: #fff !important;
 }
+
+.showMessage {
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 16px;
+  padding: 14px;
+  border-radius: 5px;
+  position: fixed;
+  top: 12%;
+  left: 50%;
+  z-index: 99999999;
+  transform: translate(-50%, -50%);
+  display: none;
+}

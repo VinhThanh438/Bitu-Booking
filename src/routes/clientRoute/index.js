@@ -109,10 +109,16 @@ clientRoute
             // save user information in cookies
             res.cookie('userName', userData.data.userName);
             res.cookie('userId', userData.data.userId);
+            res.cookie('message', 'Đăng nhập thành công');
+            res.cookie('type', 'green');
 
             return res.redirect('/');
         } catch (error) {
-            console.log(error.data);
+            res.cookie(
+                'message',
+                'Đăng nhập thất bại, tên đăng nhập hoặc mật khẩu không chính xác'
+            );
+            res.cookie('type', 'red');
             return res.render('logIn');
         }
     });
@@ -132,8 +138,13 @@ clientRoute
                 password: password,
             });
 
+            res.cookie('message', 'Đăng ký thành công');
+            res.cookie('type', 'green');
+
             return res.render('logIn');
         } catch (error) {
+            res.cookie('message', 'Tên đăng nhập đã được sử dụng');
+            res.cookie('type', 'red');
             return res.render('signUp');
         }
     });

@@ -30,21 +30,14 @@
 
 <script>
   const checkLogin = () => {
-        const cookie = document.cookie;
-
-        const cookieStore = cookie.split(' ');
-        let cookies = {};
-
-        cookieStore.map((e) => {
-            let sub = e.trim().split('=');
-            cookies[sub[0]] = sub[1];
-        });
+        const userName = getCookies('userName')
+        console.log(userName)
 
         const acc = document.querySelector('.acc')
 
-        if (cookies.userName) {
+        if (userName) {
             acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" 
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button>
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${userName}</button>
             <div class="dropdown-menu"><a class="dropdown-item" href="/user">Thông tin</a>
             <a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
         } else {
