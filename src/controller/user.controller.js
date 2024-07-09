@@ -58,22 +58,24 @@ const getUserInfor = async (req, res, next) => {
         const [getUserData] = await pool.execute(query, [userId]);
 
         // get confirmed booking
-        query = `select u.user_name, t.ticket_name, t.ticket_price, td.td_id, td.status, pd.confirmation_time
-                from tb_user u
-                join tb_ticket_detail td ON u.user_id = td.user_id
-                join tb_ticket t ON td.ticket_id = t.ticket_id
-                left join tb_payment_details pd ON td.td_id = pd.td_id
-                where u.user_id = ? and td.status = ? or td.status = ?`;
+        query = `select tb_user.user_name, tb_ticket.ticket_name, tb_ticket.ticket_price, 
+                tb_ticket_detail.td_id, tb_ticket_detail.status, tb_payment_details.confirmation_time
+                from tb_ticket_detail
+                join tb_user on tb_user.user_id = tb_ticket_detail.user_id
+                join tb_ticket on tb_ticket.ticket_id = tb_ticket_detail.ticket_id
+                join tb_payment_details on tb_payment_details.td_id = tb_ticket_detail.td_id
+                where tb_user.user_id = ? and tb_ticket_detail.status = ? or tb_ticket_detail.status = ?`;
         const [getBookingData] = await pool.execute(query, [
             userId,
+            'booked',
             'confirmed',
-            'canceled',
         ]);
         const userData = [getUserData[0]];
-        let bookingData = [getBookingData[0]];
+        let bookingData = getBookingData;
         if (!getBookingData[0]) bookingData = {};
 
         const data = { userData, bookingData };
+        console.log(getBookingData);
 
         return res.status(statusCode.OK).json(data);
     } catch (error) {

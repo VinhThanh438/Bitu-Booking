@@ -11,7 +11,7 @@ const checkCanceled = async (req, res, next) => {
 
         if (data[0])
             return next(
-                appError(statusCode.BAD_REQUEST, {
+                new appError(statusCode.BAD_REQUEST, {
                     message: 'booking has been canceled!',
                 })
             );

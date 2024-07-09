@@ -63,9 +63,21 @@ const addBookingDetail = async (req, res, next) => {
             'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
         await pool.execute(query, [ticketId]);
 
-        return res
-            .status(statusCode.CREATED)
-            .json({ bookingId: data.insertId });
+        const bookingId = data.insertId;
+
+        // auto cancel booking
+        setTimeout(async () => {
+            let query = 'select * from tb_ticket_detail where td_id = ?';
+            const [getData] = await pool.execute(query, [bookingId]);
+            const data = getData[0];
+            if (data.status == 'booked') {
+                query = 'delete from tb_ticket_detail where td_id = ?';
+                await pool.execute(query, [bookingId]);
+                console.log('he thong da huy ve');
+            }
+        }, 10000);
+
+        return res.status(statusCode.CREATED).json({ bookingId: bookingId });
     } catch (error) {
         next(new appError(error));
     }
@@ -150,7 +162,7 @@ const cancelBooking = async (req, res, next) => {
         // update quantity
         query =
             'update tb_ticket set quantity = quantity + 1 where ticket_id = ?';
-        await pool.execute(query, ['canceled', ticketId]);
+        await pool.execute(query, [ticketId]);
 
         // delete confirmed time
         query = 'delete from tb_payment_details where td_id = ?';

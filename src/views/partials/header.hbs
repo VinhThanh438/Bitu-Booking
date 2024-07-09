@@ -5,7 +5,6 @@
                 <div class="collapse navbar-collapse"
                         id="navcol-1">
                     <form class="form-inline mr-auto" target="_self">
-                        {{!-- <div class="form-group"><label for="search-field"><i class="fa fa-search text-white"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div> --}}
                     </form>
                     <div class="acc">
                         {{!-- <span class="navbar-text" style="margin-right: 12px;"> 
@@ -42,12 +41,19 @@
         });
 
         const acc = document.querySelector('.acc')
-        console.log(cookies)
+
         if (cookies.userName) {
-            acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button><div class="dropdown-menu"><a class="dropdown-item" href="/user">Thông tin</a><a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
+            acc.innerHTML = `<div class="btn-group"><button class="btn btn-secondary btn-sm dropdown-toggle" type="button" 
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${cookies.userName}</button>
+            <div class="dropdown-menu"><a class="dropdown-item" href="/user">Thông tin</a>
+            <a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
         } else {
-            acc.innerHTML = '<span class="navbar-text" style="margin-right: 12px;"> <a class="login" href="/login">Log In</a></span><a class="btn btn-light action-button" role="button" href="/signup"style="margin-bottom: 5px;">Signup</a>'
+            acc.innerHTML = `<span class="navbar-text" style="margin-right: 12px;"> 
+            <a class="login" href="/login">Log In</a></span>
+            <a class="btn btn-light action-button" role="button" 
+            href="/signup"style="margin-bottom: 5px;">Signup</a>`
         }
     }  
+
     checkLogin()
 </script>

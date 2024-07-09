@@ -6,17 +6,19 @@ const checkPaymentExpiration = require('../utils/checkExpiredTime');
 const checkPaymentTime = async (req, res, next) => {
     try {
         // get data
-        let query = 'select * from tb_ticket_detail where status = ?';
-        const [getData] = await pool.execute(query, ['booked']);
+        const { ticketDetailId } = req.body;
+        console.log('ticketDetailId:', ticketDetailId);
+        let query =
+            'select * from tb_ticket_detail where status = ? and td_id = ?';
+        const [getData] = await pool.execute(query, ['booked', ticketDetailId]);
 
         const data = getData[0];
         const bookingTime = data.booking_time;
 
         if (checkPaymentExpiration(bookingTime)) {
             // delete expired booking
-            console.log(req.body);
             query = 'delete from tb_ticket_detail where td_id = ?';
-            await pool.execute(query, [req.body.ticketDetailId]);
+            await pool.execute(query, [ticketDetailId]);
 
             next(
                 new appError(
