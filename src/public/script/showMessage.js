@@ -15,8 +15,8 @@ const showSuccessMessage = () => {
 
         setTimeout(() => {
             messageE.style.display = 'none';
-            document.cookie = 'message=';
-            document.cookie = 'type=';
+            deleteCookie('message');
+            deleteCookie('type');
         }, 3000);
     }
 };

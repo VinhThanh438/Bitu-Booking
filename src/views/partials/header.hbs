@@ -7,20 +7,7 @@
                     <form class="form-inline mr-auto" target="_self">
                     </form>
                     <div class="acc">
-                        {{!-- <span class="navbar-text" style="margin-right: 12px;"> 
-                            <a class="login" href="/login">Log In</a>
-                        </span>
-                        <a class="btn btn-light action-button" role="button" href="/signup"
-                        style="margin-bottom: 5px;">Signup</a> --}}
-                        {{!-- <div class="btn-group">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Small button
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/user">Kiểm tra vé</a>
-                                <a class="dropdown-item" href="/logout">Đăng xuất</a>
-                            </div>
-                        </div> --}}
+
                     </div>
                 </div>
             </div>
@@ -31,7 +18,6 @@
 <script>
   const checkLogin = () => {
         const userName = getCookies('userName')
-        console.log(userName)
 
         const acc = document.querySelector('.acc')
 
@@ -42,9 +28,9 @@
             <a class="dropdown-item" href="/logout">Đăng xuất</a></div></div>`
         } else {
             acc.innerHTML = `<span class="navbar-text" style="margin-right: 12px;"> 
-            <a class="login" href="/login">Log In</a></span>
+            <a class="login" href="/login">Đăng nhập</a></span>
             <a class="btn btn-light action-button" role="button" 
-            href="/signup"style="margin-bottom: 5px;">Signup</a>`
+            href="/signup"style="margin-bottom: 5px;">Đăng ký</a>`
         }
     }  
 

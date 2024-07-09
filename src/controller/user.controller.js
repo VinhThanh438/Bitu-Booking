@@ -82,8 +82,21 @@ const getUserInfor = async (req, res, next) => {
     }
 };
 
+const getBookingUrl = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const query =
+            'select td_id from tb_ticket_detail where user_id = ? and status = ?';
+        const [data] = await pool.execute(query, [userId, 'booked']);
+        return res.status(statusCode.OK).json({ ticketDetailId: data[0] });
+    } catch (error) {
+        next(new appError(error));
+    }
+};
+
 module.exports = {
     signUp,
     logIn,
     getUserInfor,
+    getBookingUrl,
 };

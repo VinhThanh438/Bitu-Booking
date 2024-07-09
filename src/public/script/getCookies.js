@@ -1,6 +1,10 @@
+const deleteCookie = (name) => {
+    document.cookie = name + '=; Max-Age=0; path=/;';
+};
+
 const getCookies = (name) => {
     const nameEQ = name + '=';
-    const ca = document.cookie.split(';');
+    let ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i].trim();
         if (c.indexOf(nameEQ) === 0) {

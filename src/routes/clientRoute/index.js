@@ -4,8 +4,29 @@ const clientRoute = express.Router();
 
 // get home page
 clientRoute.route('/').get(async (req, res) => {
+    // check user login
+    const userId = req.cookies.userId;
+
+    if (userId) {
+        const getBookingUrl = await axios.get(`/api/v1/booking-url/${userId}`);
+        const ticketDetailId = getBookingUrl.data.ticketDetailId;
+        if (ticketDetailId) {
+            const getData = await axios.get('/api/v1');
+            const data = {
+                ticketData: getData.data,
+                ticketDetailId: [{ td_id: `/booking/${ticketDetailId.td_id}` }],
+            };
+            return res.render('home', {
+                data: data,
+            });
+        }
+    }
+
     const getData = await axios.get('/api/v1');
-    return res.render('home', { ticketData: getData.data });
+    const data = { ticketData: getData.data, ticketDetailId: [{ td_id: '#' }] };
+    return res.render('home', {
+        data: data,
+    });
 });
 
 // booking detail
@@ -24,6 +45,8 @@ clientRoute
             });
 
             const bookingId = getBookingData.data.bookingId;
+
+            res.cookie('bookingDetailUrl', `/booking/${ticketId}`);
 
             // get booking detail after creating
             return res.redirect(`/booking/${bookingId}`);
@@ -74,16 +97,22 @@ clientRoute.route('/payment').post(async (req, res) => {
         return res.render('paymentSuccess');
     } catch (error) {
         if (error.response.status == 402) {
-            res.cookie('message', 'Tài khoản của bạn không đủ để thanh toán');
+            const oldUrl = req.get('Referer');
+            const url = new URL(oldUrl);
+            const path = url.pathname;
+
+            // res.cookie('message', 'Tài khoản của bạn không đủ để thanh toán');
+            // res.cookie('type', 'red');
+
+            return res.redirect(path);
+        } else {
+            res.cookie(
+                'message',
+                'Không thể đặt vé, bạn đã hết thời gian thực hiện thanh toán'
+            );
             res.cookie('type', 'red');
-            return res.redirect(req.get('Referer'));
+            return res.redirect('/');
         }
-        res.cookie(
-            'message',
-            'Không thể đặt vé, bạn đã hết thời gian thực hiện thanh toán'
-        );
-        res.cookie('type', 'red');
-        return res.redirect('/');
     }
 });
 
@@ -95,9 +124,8 @@ clientRoute.route('/booking/cancel/:ticketDetailId').get(async (req, res) => {
         await axios.post('/api/v1/payment/canceled', { ticketDetailId });
 
         const data = await axios.get(`/api/v1/user/${userId}`);
-
-        res.cookie('message', 'Đã hủy thành công');
-        res.cookie('type', 'green');
+        // res.cookie('message', 'Đã hủy thành công');
+        // res.cookie('type', 'green');
 
         return res.render('ticketList', { data: data.data });
     } catch (error) {

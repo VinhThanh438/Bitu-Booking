@@ -4,40 +4,22 @@
         <div class="row justify-content-center">
           <div class="col-xl-5 col-md-8">
             <form class="bg-white rounded shadow-5-strong p-5 mt-5" method="post" action="/login">
-                <h4>Login</h4>
+                <h4>Đăng nhập</h4>
               <!-- Email input -->
               <div class="form-outline mb-4">
-                <label class="form-label" for="form1Example1">User name</label>
+                <label class="form-label" for="form1Example1">Tên người dùng</label>
                 <input type="text" id="form1Example1" class="form-control" name="userName" required/>
               </div>
 
               <!-- Password input -->
               <div class="form-outline mb-4">
-                <label class="form-label" for="form1Example2">Password</label>
+                <label class="form-label" for="form1Example2">Mật khẩu</label>
                 <input type="password" id="form1Example2" class="form-control" name="password" required/>
               </div>
 
-              <!-- 2 column grid layout for inline styling -->
-              {{!-- <div class="row mb-4">
-                <div class="col d-flex justify-content-center">
-                  <!-- Checkbox -->
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
-                    <label class="form-check-label" for="form1Example3">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-
-                <div class="col text-center">
-                  <!-- Simple link -->
-                  <a href="#!">Forgot password?</a>
-                </div>
-              </div> --}}
-
               <!-- Submit button -->
-              <button type="submit" class="btn btn-primary btn-block">Log in</button>
-              <p class="text-center mt-3">Not registered? <a href="/signup">Create an account</a></p>
+              <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+              <p class="text-center mt-3">Bạn chưa có tài khoản? <a href="/signup">Tạo tài khoản</a></p>
             </form>
           </div>
         </div>

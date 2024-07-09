@@ -38,23 +38,15 @@
                                          <div class="cart_item_text price">{{ticket_price}}</div>
                                      </div>
                                      <div class="cart_item_total cart_info_col">
-                                         {{#eq confirmation_time ""}}
-
-                                         {{else}}
                                          <div class="cart_item_title">Ngày đặt</div>
                                          <div class="cart_item_text formatTime">{{confirmation_time}}</div>
-                                         {{/eq}}
                                      </div>
                                      <div class="cart_item_total cart_info_col">
                                          <div class="cart_item_title">Trạng thái</div>
                                          <div class="cart_item_text">{{status}}</div>
                                      </div>
                                      <div class="cart_item_total cart_info_col">
-                                        {{#eq status "confirmed"}}
                                          <a href="/booking/cancel/{{td_id}}" class="btn btn-primary cart_item_text">Hủy</a>
-                                         {{else}}
-                                         
-                                        {{/eq}}
                                      </div>
                                  </div>
                              </li>

@@ -12,6 +12,7 @@ const {
     signUp,
     logIn,
     getUserInfor,
+    getBookingUrl,
 } = require('../../controller/user.controller');
 const { checkBooking } = require('../../middleware/checkBooking');
 const { checkPaymentTime } = require('../../middleware/checkPaymentTime');
@@ -34,5 +35,7 @@ ApiRouter.route('/signup').post(signUp);
 ApiRouter.route('/login').post(logIn);
 
 ApiRouter.route('/user/:userId').get(getUserInfor);
+
+ApiRouter.route('/booking-url/:userId').get(getBookingUrl);
 
 module.exports = ApiRouter;
