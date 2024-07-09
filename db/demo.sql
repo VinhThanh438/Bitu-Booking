@@ -40,7 +40,20 @@ after delete on tb_ticket_detail
 for each row
 begin
     update tb_ticket set quantity = quantity + 1 where ticket_id = old.ticket_id;
-end //
+end
+//
+delimiter ;
+
+delimiter //
+create trigger after_insert_tb_payment_details
+after insert on tb_payment_details
+for each row
+begin
+    update tb_ticket_detail
+    set status = 'confirmed'
+    where td_id = new.td_id;
+end;
+//
 delimiter ;
 
 insert into `tb_user` (`user_name`, `password`) values 
@@ -58,3 +71,4 @@ insert into `tb_ticket` (`ticket_name`, `ticket_price`, `quantity`) values
 select * from `tb_user`;
 select * from `tb_ticket`;
 select * from `tb_ticket_detail`;
+select * from `tb_payment_details`;
