@@ -28,7 +28,11 @@ clientRoute
             // get booking detail after creating
             return res.redirect(`/booking/${bookingId}`);
         } catch (error) {
-            console.log(error.data);
+            res.cookie(
+                'message',
+                'Không thể đặt vé, bạn đang có một vé đang trong quá trình thanh toán'
+            );
+            res.cookie('type', 'red');
             return res.redirect('/');
         }
     })
@@ -47,7 +51,8 @@ clientRoute
 
             return res.render('bookingDetail', { data: [data] });
         } catch (error) {
-            console.log(error.data);
+            res.cookie('message', 'Đơn đặt không tồn tại hoặc đã hết hạn');
+            res.cookie('type', 'red');
             return res.redirect('/');
         }
     });
@@ -68,9 +73,16 @@ clientRoute.route('/payment').post(async (req, res) => {
         });
         return res.render('paymentSuccess');
     } catch (error) {
-        console.log(error.data);
-        if (error.response.status == 402)
+        if (error.response.status == 402) {
+            res.cookie('message', 'Tài khoản của bạn không đủ để thanh toán');
+            res.cookie('type', 'red');
             return res.redirect(req.get('Referer'));
+        }
+        res.cookie(
+            'message',
+            'Không thể đặt vé, bạn đã hết thời gian thực hiện thanh toán'
+        );
+        res.cookie('type', 'red');
         return res.redirect('/');
     }
 });
@@ -83,9 +95,14 @@ clientRoute.route('/booking/cancel/:ticketDetailId').get(async (req, res) => {
         await axios.post('/api/v1/payment/canceled', { ticketDetailId });
 
         const data = await axios.get(`/api/v1/user/${userId}`);
+
+        res.cookie('message', 'Đã hủy thành công');
+        res.cookie('type', 'green');
+
         return res.render('ticketList', { data: data.data });
     } catch (error) {
-        console.log(error.data);
+        res.cookie('message', 'Không thể hủy vé');
+        res.cookie('type', 'red');
         return res.redirect('/');
     }
 });
@@ -153,6 +170,8 @@ clientRoute
 clientRoute.route('/logout').get((req, res) => {
     res.clearCookie('userName');
     res.clearCookie('userId');
+    res.cookie('message', 'Đăng xuất thành công');
+    res.cookie('type', 'green');
     return res.redirect('/');
 });
 

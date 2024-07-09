@@ -64,10 +64,9 @@ const getUserInfor = async (req, res, next) => {
                 join tb_user on tb_user.user_id = tb_ticket_detail.user_id
                 join tb_ticket on tb_ticket.ticket_id = tb_ticket_detail.ticket_id
                 join tb_payment_details on tb_payment_details.td_id = tb_ticket_detail.td_id
-                where tb_user.user_id = ? and tb_ticket_detail.status = ? or tb_ticket_detail.status = ?`;
+                where tb_user.user_id = ? and tb_ticket_detail.status = ?`;
         const [getBookingData] = await pool.execute(query, [
             userId,
-            'booked',
             'confirmed',
         ]);
         const userData = [getUserData[0]];

@@ -68,9 +68,11 @@
                     <li class="list-group-item FontSizeMidum">Tên vé: {{ticketName}}</li>
                     <input type="hidden" value="{{ticketName}}" name="ticketName">
                     <li class="list-group-item FontSizeMidum">Số lượng: 1</li>
-                    <li class="list-group-item FontSizeMidum d-flex">Giá: <p class="price">{{ticketPrice}}</p></li>
+                    <li class="list-group-item FontSizeMidum d-flex">Thời gian đặt: 
+                        <p class="formatTime" style="margin-left: 6px;">{{bookingTime}}</p></li>
                     <input type="hidden" value="{{ticketPrice}}" name="ticketPrice">
-                    <li class="list-group-item FontSizeMidum d-flex">Thành tiền: <p class="totalPrice price">{{ticketPrice}}</p></li>
+                    <li class="list-group-item FontSizeMidum d-flex">Thành tiền: 
+                        <p class="totalPrice price" style="margin-left: 6px;">{{ticketPrice}}</p></li>
                     <input type="hidden" value="{{ticketPrice}}" name="totalPrice">
                 </ul>
                 <button type="submit" class="btn btn-payment btn-primary btn-lg btn-block submitBtn">Thanh toán</button>
