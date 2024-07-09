@@ -203,6 +203,27 @@ clientRoute.route('/logout').get((req, res) => {
     return res.redirect('/');
 });
 
+// top up user balance
+clientRoute.route('/topup').post(async (req, res) => {
+    const oldUrl = req.get('Referer');
+    const url = new URL(oldUrl);
+    const path = url.pathname;
+
+    try {
+        const { money } = req.body;
+        if (money < 0) return res.redirect(path);
+        const userId = req.cookies.userId;
+        await axios.post('/api/v1/topup', { money, userId });
+        res.cookie('message', 'Nạp tiền thành công');
+        res.cookie('type', 'green');
+        return res.redirect(path);
+    } catch (error) {
+        res.cookie('message', 'Nạp tiền không thành công');
+        res.cookie('type', 'red');
+        return res.redirect(path);
+    }
+});
+
 // get ticket list
 clientRoute.route('/user').get(async (req, res) => {
     try {

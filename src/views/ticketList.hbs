@@ -10,6 +10,8 @@
                     <div class="order_total">
                         {{#each data.userData}}
                          <div class="order_total_content text-md-right">
+                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                             style="margin-bottom: 4px; margin-right: 10px;">Nạp tiền</button>
                              <div class="order_total_title">Số dư:</div>
                              <div class="order_total_amount price">{{balance}}</div>
                          </div>
@@ -43,7 +45,8 @@
                                      </div>
                                      <div class="cart_item_total cart_info_col">
                                          <div class="cart_item_title">Trạng thái</div>
-                                         <div class="cart_item_text">{{status}}</div>
+                                         {{!-- <div class="cart_item_text">{{status}}</div> --}}
+                                         <div class="cart_item_text">Đã thanh toán</div>
                                      </div>
                                      <div class="cart_item_total cart_info_col">
                                          <a href="/booking/cancel/{{td_id}}" class="btn btn-primary cart_item_text">Hủy</a>
@@ -59,3 +62,36 @@
          </div>
      </div>
  </div>
+
+ <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nhập số tiền bạn muốn nạp</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/topup" method="post">
+        <div class="modal-body">
+            <input type="number" name="money" class="form-control" oninput="formatCurrency(this)">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-success">Nạp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    const formatCurrency = (input) => {
+        const value = input.value.replace(/\D/g, '');
+        if (value.length > 3) {
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        input.value = value;
+    }
+</script>

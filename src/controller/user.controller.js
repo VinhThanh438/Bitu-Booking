@@ -34,7 +34,6 @@ const logIn = async (req, res, next) => {
         const query =
             'select * from tb_user where user_name = ? and password = ?';
         const [getUserData] = await pool.execute(query, [userName, password]);
-        console.log('get user Data: ', getUserData);
 
         if (getUserData.length == 0)
             return res
@@ -74,7 +73,6 @@ const getUserInfor = async (req, res, next) => {
         if (!getBookingData[0]) bookingData = {};
 
         const data = { userData, bookingData };
-        console.log(getBookingData);
 
         return res.status(statusCode.OK).json(data);
     } catch (error) {
@@ -94,9 +92,24 @@ const getBookingUrl = async (req, res, next) => {
     }
 };
 
+const topUpBalance = async (req, res, next) => {
+    try {
+        const { money, userId } = req.body;
+        const query =
+            'update tb_user set balance = balance + ? where user_id = ?';
+
+        await pool.execute(query, [money, userId]);
+
+        return res.status(statusCode.OK).json(message.SUCCESS);
+    } catch (error) {
+        next(new appError(error));
+    }
+};
+
 module.exports = {
     signUp,
     logIn,
     getUserInfor,
     getBookingUrl,
+    topUpBalance,
 };

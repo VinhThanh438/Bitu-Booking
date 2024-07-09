@@ -13,6 +13,7 @@ const {
     logIn,
     getUserInfor,
     getBookingUrl,
+    topUpBalance,
 } = require('../../controller/user.controller');
 const { checkBooking } = require('../../middleware/checkBooking');
 const { checkPaymentTime } = require('../../middleware/checkPaymentTime');
@@ -37,5 +38,7 @@ ApiRouter.route('/login').post(logIn);
 ApiRouter.route('/user/:userId').get(getUserInfor);
 
 ApiRouter.route('/booking-url/:userId').get(getBookingUrl);
+
+ApiRouter.route('/topup').post(topUpBalance);
 
 module.exports = ApiRouter;
