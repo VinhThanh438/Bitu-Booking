@@ -35,8 +35,16 @@ clientRoute
     // add booking detail
     .post(async (req, res) => {
         try {
-            const ticketId = req.params.ticket_id;
             const userId = req.cookies.userId;
+            if (!userId) {
+                res.cookie(
+                    'message',
+                    'Không thể đặt vé, bạn cần đăng nhập để có thể đặt vé!'
+                );
+                res.cookie('type', 'red');
+                return res.redirect('/');
+            }
+            const ticketId = req.params.ticket_id;
 
             // create booking detail
             const getBookingData = await axios.post('/api/v1/booking', {
