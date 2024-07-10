@@ -18,10 +18,11 @@ const {
 const { checkBooking } = require('../../middleware/checkBooking');
 const { checkPaymentTime } = require('../../middleware/checkPaymentTime');
 const { checkCanceled } = require('../../middleware/checkCanceled');
+const { checkQuantity } = require('../../middleware/checkQuantity');
 
 ApiRouter.route('/').get(getAllTicket);
 
-ApiRouter.route('/booking').post(checkBooking, addBookingDetail);
+ApiRouter.route('/booking').post(checkBooking, checkQuantity, addBookingDetail);
 
 ApiRouter.route('/booking/detail').post(getBookingDetail);
 

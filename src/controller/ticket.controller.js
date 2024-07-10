@@ -52,16 +52,16 @@ const addBookingDetail = async (req, res, next) => {
     try {
         const { userId, ticketId } = req.body;
 
-        // add booking data
+        // update ticket number
         let query =
+            'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
+        await pool.execute(query, [ticketId]);
+
+        // add booking data
+        query =
             'insert into tb_ticket_detail (user_id, ticket_id) values (?, ?)';
 
         const [data] = await pool.execute(query, [userId, ticketId]);
-
-        // update ticket number
-        query =
-            'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
-        await pool.execute(query, [ticketId]);
 
         const bookingId = data.insertId;
 

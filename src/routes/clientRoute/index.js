@@ -59,6 +59,11 @@ clientRoute
             // get booking detail after creating
             return res.redirect(`/booking/${bookingId}`);
         } catch (error) {
+            if (error.response.status == 503) {
+                res.cookie('message', 'Vé đã được đặt hết');
+                res.cookie('type', 'red');
+                return res.redirect('/');
+            }
             res.cookie(
                 'message',
                 'Không thể đặt vé, bạn đang có một vé đang trong quá trình thanh toán'
