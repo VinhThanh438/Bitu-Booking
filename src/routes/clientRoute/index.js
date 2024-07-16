@@ -9,6 +9,7 @@ clientRoute.route('/').get(async (req, res) => {
 
     if (userId) {
         const getBookingUrl = await axios.get(`/api/v1/booking-url/${userId}`);
+
         const ticketDetailId = getBookingUrl.data.ticketDetailId;
         if (ticketDetailId) {
             const getData = await axios.get('/api/v1');
