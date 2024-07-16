@@ -6,7 +6,11 @@ const checkBooking = async (req, res, next) => {
     try {
         const { userId } = req.body;
 
-        const query = `select * from tb_ticket_detail 
+        // rate limit in certain of time
+        // 10s limit 10 request
+
+        //
+        const query = `select * from tb_ticket_detail
             inner join tb_user on tb_ticket_detail.user_id = tb_user.user_id
             where tb_ticket_detail.status = ? and tb_user.user_id = ?`;
 

@@ -25,7 +25,7 @@ const getBookingDetail = async (req, res, next) => {
         join tb_user on tb_ticket_detail.user_id = tb_user.user_id
         where td_id = ?`;
 
-        const [getData] = await pool.execute(query, [bookingId]);
+        const [getData] = await connection.query(query, [bookingId]);
 
         const {
             td_id,
@@ -125,7 +125,7 @@ const addPaymentDetail = async (req, res, next) => {
 
         // get user data
         let query = 'select * from tb_user where user_id = ?';
-        const [getUserData] = await pool.execute(query, [userId]);
+        const [getUserData] = await connection.query(query, [userId]);
         const userData = getUserData[0];
 
         // check user balance
@@ -143,11 +143,11 @@ const addPaymentDetail = async (req, res, next) => {
         // success => update user balance
         const newBalance = balance - totalPrice;
         query = 'update tb_user set balance = ? where user_id = ?';
-        await pool.execute(query, [newBalance, userId]);
+        await connection.query(query, [newBalance, userId]);
 
         // create payment detail
         query = 'insert into tb_payment_details (td_id) values (?)';
-        await pool.execute(query, [ticketDetailId]);
+        await connection.query(query, [ticketDetailId]);
 
         await connection.commit();
         pool.releaseConnection();
@@ -175,7 +175,8 @@ const cancelBooking = async (req, res, next) => {
                     join tb_ticket on tb_ticket_detail.ticket_id = tb_ticket.ticket_id
                     join tb_user on tb_ticket_detail.user_id = tb_user.user_id
                     where td_id = ?`;
-        const [selectData] = await pool.execute(query, [ticketDetailId]);
+        const [selectData] = await connection.query(query, [ticketDetailId]);
+
         const userId = selectData[0].user_id;
         const totalPrice = selectData[0].ticket_price;
         const ticketId = selectData[0].ticket_id;
@@ -183,20 +184,20 @@ const cancelBooking = async (req, res, next) => {
         // refund to user (refund money = 90% of ticket price)
         const refundMoney = (totalPrice / 100) * 90;
         query = 'update tb_user set balance = balance + ? where user_id = ?';
-        await pool.execute(query, [refundMoney, userId]);
+        await connection.query(query, [refundMoney, userId]);
 
         // update booking status
         query = 'update tb_ticket_detail set status = ? where td_id = ?';
-        await pool.execute(query, ['canceled', ticketDetailId]);
+        await connection.query(query, ['canceled', ticketDetailId]);
 
         // update quantity
         query =
             'update tb_ticket set quantity = quantity + 1 where ticket_id = ?';
-        await pool.execute(query, [ticketId]);
+        await connection.query(query, [ticketId]);
 
         // delete confirmed time
         query = 'delete from tb_payment_details where td_id = ?';
-        await pool.execute(query, [ticketDetailId]);
+        await connection.query(query, [ticketDetailId]);
 
         await connection.commit();
         pool.releaseConnection();

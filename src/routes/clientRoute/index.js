@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('../../config/axios.config');
+const limiter = require('../../config/rateLimit.config');
 const clientRoute = express.Router();
 
 // get home page
@@ -34,7 +35,7 @@ clientRoute.route('/').get(async (req, res) => {
 clientRoute
     .route('/booking/:ticket_id')
     // add booking detail
-    .post(async (req, res) => {
+    .post(limiter, async (req, res) => {
         try {
             const userId = req.cookies.userId;
             if (!userId) {
@@ -243,6 +244,7 @@ clientRoute.route('/user').get(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         const data = await axios.get(`/api/v1/user/${userId}`);
+
         return res.render('ticketList', { data: data.data });
     } catch (error) {
         console.log(error);
