@@ -1,6 +1,7 @@
 const { statusCode, message } = require('../constant/response');
 const appError = require('../utils/appError');
 const pool = require('../config/db.config');
+// const lock = require('async-lock');
 
 const getAllTicket = async (req, res, next) => {
     try {
@@ -12,87 +13,91 @@ const getAllTicket = async (req, res, next) => {
 };
 
 const getBookingDetail = async (req, res, next) => {
-    await pool.beginTransaction(); // start transaction
+    const connection = await pool.getConnection();
 
     try {
+        await connection.beginTransaction();
         const { bookingId } = req.body;
 
-        // get booking infor
-        let query = 'select * from tb_ticket_detail where td_id = ?';
-        const [bookingData] = await pool.execute(query, [bookingId]);
-        const { td_id, user_id, ticket_id, status, booking_time } =
-            bookingData[0];
+        // get data infor
+        let query = `select * from tb_ticket_detail 
+        join tb_ticket on tb_ticket_detail.ticket_id = tb_ticket.ticket_id
+        join tb_user on tb_ticket_detail.user_id = tb_user.user_id
+        where td_id = ?`;
 
-        // Make sure BookingData has value
+        const [getData] = await pool.execute(query, [bookingId]);
 
-        // get user infor
-        query = 'select * from tb_user where user_id = ?';
-        const [userData] = await pool.execute(query, [user_id]);
-        const userName = userData[0].user_name;
-
-        // get ticket infor
-        query = 'select * from tb_ticket where ticket_id = ?';
-        const [ticketData] = await pool.execute(query, [ticket_id]);
-        const { ticket_name, ticket_price } = ticketData[0];
+        const {
+            td_id,
+            user_id,
+            ticket_id,
+            status,
+            booking_time,
+            user_name,
+            ticket_name,
+            ticket_price,
+        } = getData[0];
 
         const data = {
             ticketDetailId: td_id,
             userId: user_id,
             ticketId: ticket_id,
-            userName,
+            userName: user_name,
             ticketName: ticket_name,
             ticketPrice: ticket_price,
             status,
             bookingTime: booking_time,
         };
 
-        await pool.commit();
-        await pool.end();
+        await connection.commit();
+        pool.releaseConnection();
 
         return res.status(statusCode.OK).json(data);
     } catch (error) {
-        await pool.rollback();
-        await pool.end();
+        await connection.rollback();
+        pool.releaseConnection();
 
         next(new appError(error));
     }
 };
 
 const addBookingDetail = async (req, res, next) => {
-    await pool.beginTransaction();
+    const connection = await pool.getConnection();
     try {
+        await connection.beginTransaction();
         const { userId, ticketId } = req.body;
 
         // update ticket number
         let query =
             'update tb_ticket set quantity = quantity - 1 where ticket_id = ? and quantity > 0';
-        await pool.execute(query, [ticketId]);
+        await connection.query(query, [ticketId]);
 
         // add booking data
-        query = 'insert into user_ticket (user_id, ticket_id) values (?, ?)';
-        const [data] = await pool.execute(query, [userId, ticketId]);
+        query =
+            'insert into tb_ticket_detail (user_id, ticket_id) values (?, ?)';
+        const [data] = await connection.query(query, [userId, ticketId]);
 
         const bookingId = data.insertId;
 
         // auto cancel booking after 60 seconds
         setTimeout(async () => {
             let query = 'select * from tb_ticket_detail where td_id = ?';
-            const [getData] = await pool.execute(query, [bookingId]);
+            const [getData] = await connection.query(query, [bookingId]);
             const data = getData[0];
             if (data.status == 'booked') {
                 query = 'delete from tb_ticket_detail where td_id = ?';
-                await pool.execute(query, [bookingId]);
+                await connection.query(query, [bookingId]);
                 console.log('he thong da huy ve');
             }
         }, 60000);
 
-        await pool.commit();
-        await pool.end();
+        await connection.commit();
+        pool.releaseConnection();
 
         return res.status(statusCode.CREATED).json({ bookingId: bookingId });
     } catch (error) {
-        await pool.rollback();
-        await pool.end();
+        await connection.rollback();
+        pool.releaseConnection();
 
         next(new appError(error));
     }
@@ -113,9 +118,9 @@ const removeBookingDetail = async (req, res, next) => {
 };
 
 const addPaymentDetail = async (req, res, next) => {
-    await pool.beginTransaction();
+    const connection = await pool.getConnection();
     try {
-        // lock and
+        await connection.beginTransaction();
         const { ticketDetailId, userId, totalPrice } = req.body;
 
         // get user data
@@ -144,23 +149,24 @@ const addPaymentDetail = async (req, res, next) => {
         query = 'insert into tb_payment_details (td_id) values (?)';
         await pool.execute(query, [ticketDetailId]);
 
-        await pool.commit();
-        await pool.end();
+        await connection.commit();
+        pool.releaseConnection();
 
         return res
             .status(statusCode.CREATED)
             .json({ message: 'payment has been confirmed successfully' });
     } catch (error) {
-        await pool.rollback();
-        await pool.end();
+        await connection.rollback();
+        pool.releaseConnection();
 
         next(new appError(error));
     }
 };
 
 const cancelBooking = async (req, res, next) => {
-    await pool.beginTransaction();
+    const connection = await pool.getConnection();
     try {
+        await connection.beginTransaction();
         const { ticketDetailId } = req.body;
 
         // select data
@@ -192,14 +198,15 @@ const cancelBooking = async (req, res, next) => {
         query = 'delete from tb_payment_details where td_id = ?';
         await pool.execute(query, [ticketDetailId]);
 
-        await pool.commit();
+        await connection.commit();
+        pool.releaseConnection();
 
         return res
             .status(statusCode.OK)
             .json({ message: 'booking has canceled' });
     } catch (error) {
-        await pool.rollback();
-        await pool.end();
+        await connection.rollback();
+        pool.releaseConnection();
 
         next(new appError(error));
     }

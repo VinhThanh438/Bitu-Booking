@@ -3,12 +3,14 @@ const appError = require('../utils/appError');
 const pool = require('../config/db.config');
 
 const signUp = async (req, res, next) => {
+    const connection = await pool.getConnection();
     try {
+        await connection.beginTransaction();
         const { userName, password } = req.body;
 
         // check existed account
         let query = 'select * from tb_user where user_name = ?';
-        const [getUserData] = await pool.execute(query, [userName]);
+        const [getUserData] = await connection.query(query, [userName]);
 
         if (getUserData.length != 0)
             return res
@@ -18,10 +20,16 @@ const signUp = async (req, res, next) => {
         // create account
         query = 'insert into tb_user (user_name, password) values (?, ?)';
 
-        await pool.execute(query, [userName, password]);
+        await connection.query(query, [userName, password]);
+
+        await connection.commit();
+        pool.releaseConnection();
 
         return res.status(statusCode.CREATED).json(message.SUCCESS);
     } catch (error) {
+        await connection.rollback();
+        pool.releaseConnection();
+
         next(new appError(error));
     }
 };
@@ -50,7 +58,9 @@ const logIn = async (req, res, next) => {
 };
 
 const getUserInfor = async (req, res, next) => {
+    const connection = await pool.getConnection();
     try {
+        await connection.beginTransaction();
         // get user information
         const userId = req.params.userId;
         let query = 'select user_name, balance from tb_user where user_id = ?';
@@ -74,8 +84,14 @@ const getUserInfor = async (req, res, next) => {
 
         const data = { userData, bookingData };
 
+        await connection.commit();
+        pool.releaseConnection();
+
         return res.status(statusCode.OK).json(data);
     } catch (error) {
+        await connection.rollback();
+        pool.releaseConnection();
+
         next(new appError(error));
     }
 };
