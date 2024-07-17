@@ -8,14 +8,12 @@ const autoCancelQueue = new Bull('auto-cancel-queue', {
     },
 });
 
-autoCancelQueue.process((job, done) => {
+autoCancelQueue.process(async (job, done) => {
     try {
-        setTimeout(async () => {
-            const { bookingId } = job.data;
-            const query =
-                'delete from tb_ticket_detail where td_id = ? and status = ?';
-            await pool.execute(query, [bookingId, 'booked']);
-        }, 60 * 1000);
+        const { bookingId } = job.data;
+        const query =
+            'delete from tb_ticket_detail where td_id = ? and status = ?';
+        await pool.execute(query, [bookingId, 'booked']);
     } catch (error) {
         console.log(error);
     }

@@ -84,7 +84,7 @@ const addBookingDetail = async (req, res, next) => {
         pool.releaseConnection();
 
         // auto cancel booking after 60 seconds
-        autoCancelQueue.add({ bookingId });
+        await autoCancelQueue.add({ bookingId }, { delay: 60 * 1000 });
 
         return res.status(statusCode.CREATED).json({ bookingId: bookingId });
     } catch (error) {
