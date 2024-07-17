@@ -1,6 +1,7 @@
 const { statusCode, message } = require('../constant/response');
 const appError = require('../utils/appError');
 const pool = require('../config/db.config');
+const autoCancelQueue = require('../queue/autoCancel.queue');
 // const lock = require('async-lock');
 
 const getAllTicket = async (req, res, next) => {
@@ -79,20 +80,11 @@ const addBookingDetail = async (req, res, next) => {
 
         const bookingId = data.insertId;
 
-        // auto cancel booking after 60 seconds
-        setTimeout(async () => {
-            let query = 'select * from tb_ticket_detail where td_id = ?';
-            const [getData] = await connection.query(query, [bookingId]);
-            const data = getData[0];
-            if (data.status == 'booked') {
-                query = 'delete from tb_ticket_detail where td_id = ?';
-                await connection.query(query, [bookingId]);
-                console.log('he thong da huy ve');
-            }
-        }, 60000);
-
         await connection.commit();
         pool.releaseConnection();
+
+        // auto cancel booking after 60 seconds
+        autoCancelQueue.add({ bookingId });
 
         return res.status(statusCode.CREATED).json({ bookingId: bookingId });
     } catch (error) {

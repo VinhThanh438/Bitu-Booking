@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('../../config/axios.config');
 const limiter = require('../../config/rateLimit.config');
+const bookingQueue = require('../../queue/booking.queue');
 const clientRoute = express.Router();
 
 // get home page
@@ -48,18 +49,28 @@ clientRoute
             }
             const ticketId = req.params.ticket_id;
 
-            // create booking detail
-            const getBookingData = await axios.post('/api/v1/booking', {
-                userId,
-                ticketId,
-            });
+            // queue
+            const getBookingData = await bookingQueue.add({ userId, ticketId });
 
-            const bookingId = getBookingData.data.bookingId;
+            getBookingData
+                .finished()
+                .then((result) => {
+                    console.log('Booking data:', result);
+                    const bookingId = result.bookingId;
 
-            res.cookie('bookingDetailUrl', `/booking/${ticketId}`);
+                    res.cookie('bookingDetailUrl', `/booking/${ticketId}`);
 
-            // get booking detail after creating
-            return res.redirect(`/booking/${bookingId}`);
+                    // get booking detail after creating
+                    return res.redirect(`/booking/${bookingId}`);
+                })
+                .catch((error) => {
+                    res.cookie(
+                        'message',
+                        'Không thể đặt vé, bạn đang có một vé đang trong quá trình thanh toán'
+                    );
+                    res.cookie('type', 'red');
+                    return res.redirect('/');
+                });
         } catch (error) {
             if (error.response.status == 503) {
                 res.cookie('message', 'Vé đã được đặt hết');
